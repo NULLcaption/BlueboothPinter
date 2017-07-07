@@ -37,4 +37,18 @@ public class Ztwm004Bean extends Ztwm004 {
         }
         return false;
     }
+
+    /**
+     * update实体类
+     * @return
+     */
+    public boolean update() {
+        try {
+            boolean b = OrmHelper.getInstance().getZtwm004Dao().update(this) > -1;
+            return b;
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

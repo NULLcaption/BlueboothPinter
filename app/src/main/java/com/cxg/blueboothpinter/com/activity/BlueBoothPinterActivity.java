@@ -17,9 +17,9 @@ import android.widget.Toast;
 
 import com.cxg.blueboothpinter.R;
 import com.cxg.blueboothpinter.com.adapter.BlueBoothPinterAdapter;
-import com.cxg.blueboothpinter.com.application.XPPApplication;
 import com.cxg.blueboothpinter.com.pojo.Ztwm004;
 import com.cxg.blueboothpinter.com.provider.DataProviderFactory;
+import com.cxg.blueboothpinter.com.utils.ExitApplication;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +40,7 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
     private Dialog waitingDialog;
     private BlueBoothPinterAdapter blueBoothPinterAdapter;
     private Map<String, String> map = new HashMap<>();
+    private Ztwm004 ztwm004;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
         //数据
         initData();
 
+        ExitApplication.getInstance().addActivity(this);
     }
 
     /**
@@ -85,9 +87,12 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
      * init data
      */
     public void initData() {
+        Bundle bun = getIntent().getExtras();
         //页面UI更新
         ztwm004list = new ArrayList<>();
-        if (ztwm004list.size() != 0) {
+        if (bun != null) {
+            ztwm004 = (Ztwm004) bun.get("ztwm004");
+        } else if (ztwm004list.size() != 0) {
             for (Ztwm004 ztwm004 : ztwm004list) {
                 Zcupno.setText(ztwm004.getZcupno());
                 Werks.setText(ztwm004.getWerks());
@@ -132,8 +137,6 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
         }
         //加载数据获取单位
         new getMeinsTask().execute();
-
-
     }
 
     /**
@@ -144,7 +147,7 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btnpost:
-                    if (!"".equals(IZipcode.getText().toString().trim().toString())) {
+                    if (!"".equals(IZipcode.getText().toString().trim())) {
                         // 正则判断下是否输入值为数字
                         Pattern p2 = Pattern.compile("\\d");
                         String IZipcode1 = IZipcode.getText().toString().trim();
@@ -159,7 +162,7 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.printer:
-                    if ("".equals(IZipcode.getText().toString().trim().toString())) {
+                    if ("".equals(IZipcode.getText().toString().trim())) {
                         Toast.makeText(getApplicationContext(), "无打印数据，请重新操作！", Toast.LENGTH_SHORT).show();
                         break;
                     }
@@ -177,7 +180,9 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
                     ztwm004.putString("Zcupno", Zcupno.getText().toString().trim());
                     ztwm004.putString("Zproddate", Zproddate.getText().toString().trim());
                     ztwm004.putString("Werks", Werks.getText().toString().trim());
+                    //客户编码
                     ztwm004.putString("Zkurno", Zkurno.getText().toString().trim());
+                    System.out.println("========>Zkurno"+Zkurno.getText().toString().trim());
                     ztwm004.putString("Zbc", Zbc.getText().toString().trim());
                     ztwm004.putString("Zlinecode", Zlinecode.getText().toString().trim());
                     ztwm004.putString("Matnr", Matnr.getText().toString().trim());
@@ -199,20 +204,17 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
                     ztwm004.putString("EName1", EName1.getText().toString().trim());
                     //客户名称
                     ztwm004.putString("EName2", EName2.getText().toString().trim());
-
                     intent.putExtras(ztwm004);
-
                     //进入到下一个Activity
                     startActivity(intent);
-
                     //Activity过场动画
                     overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-
-                    Toast.makeText(getApplicationContext(), "进入到打印页面", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.exit:
-                    XPPApplication.exit(BlueBoothPinterActivity.this);
+                    ExitApplication.getInstance().exit();
                     Toast.makeText(getApplicationContext(), "退出应用", Toast.LENGTH_SHORT).show();
+                    break;
+                default :
                     break;
             }
 
