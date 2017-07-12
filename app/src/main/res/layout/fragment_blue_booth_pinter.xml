@@ -60,18 +60,11 @@
                         android:layout_weight="1.70"
                         android:inputType="text"
                         android:textColor="@android:color/black"
+                        android:imeOptions="actionSearch"
                         android:textSize="16sp">
 
                         <requestFocus/>
                     </EditText>
-
-                    <Button
-                        android:id="@+id/btnpost"
-                        android:layout_width="33dp"
-                        android:layout_height="30dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/seacher"/>
 
                 </TableRow>
 

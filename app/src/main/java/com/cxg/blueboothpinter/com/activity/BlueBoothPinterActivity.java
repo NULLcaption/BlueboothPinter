@@ -7,8 +7,11 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,8 +32,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 蓝牙打印托盘数据之首页
- */
+ * description: 复打首页
+ * author: xg.chen
+ * date: 2017/7/10 17:08
+ * version: 1.0
+*/
 public class BlueBoothPinterActivity extends AppCompatActivity {
 
     private EditText IZipcode;
@@ -64,6 +70,7 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
         Zbc = (TextView) findViewById(R.id.Zbc);
         Zlinecode = (TextView) findViewById(R.id.Zlinecode);
         IZipcode = (EditText) findViewById(R.id.IZipcode);
+        IZipcode.setOnEditorActionListener(EnterListener);
         Matnr = (TextView) findViewById(R.id.matnr);
         Zproddate = (TextView) findViewById(R.id.Zproddate);
         Charg = (TextView) findViewById(R.id.Charg);
@@ -78,7 +85,6 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
         EName1 = (TextView) findViewById(R.id.EName1);
         EName2 = (TextView) findViewById(R.id.EName2);
 
-        findViewById(R.id.btnpost).setOnClickListener(BtnClicked);
         findViewById(R.id.printer).setOnClickListener(BtnClicked);
         findViewById(R.id.exit).setOnClickListener(BtnClicked);
     }
@@ -139,6 +145,32 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
         new getMeinsTask().execute();
     }
 
+    /** 
+     * description: 编码输入后回车键操作
+     * author: xg.chen
+     * date: 2017/7/10 17:12
+     * version: 1.0
+    */
+    private  TextView.OnEditorActionListener EnterListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if (!"".equals(IZipcode.getText().toString().trim())) {
+                    // 正则判断下是否输入值为数字
+                    Pattern p2 = Pattern.compile("\\d");
+                    String IZipcode1 = IZipcode.getText().toString().trim();
+                    Matcher matcher = p2.matcher(IZipcode1);
+                    if (matcher.matches()) {
+                        Toast.makeText(getApplicationContext(), "请填写准确的托盘编码...", Toast.LENGTH_SHORT).show();
+                    }
+                    new searchZtwm004Task().execute(IZipcode.getText().toString().trim());
+                } else {
+                    Toast.makeText(getApplicationContext(), "请输入托盘编码,然后查询即可!", Toast.LENGTH_SHORT).show();
+                }
+            }
+            return false;
+        }
+    };
     /**
      * 按钮点击事件监听类
      */
@@ -146,21 +178,6 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.btnpost:
-                    if (!"".equals(IZipcode.getText().toString().trim())) {
-                        // 正则判断下是否输入值为数字
-                        Pattern p2 = Pattern.compile("\\d");
-                        String IZipcode1 = IZipcode.getText().toString().trim();
-                        Matcher matcher = p2.matcher(IZipcode1);
-                        if (matcher.matches()) {
-                            Toast.makeText(getApplicationContext(), "请填写准确的托盘编码...", Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                        new searchZtwm004Task().execute(IZipcode.getText().toString().trim());
-                    } else {
-                        Toast.makeText(getApplicationContext(), "请输入托盘编码,然后查询即可!", Toast.LENGTH_SHORT).show();
-                    }
-                    break;
                 case R.id.printer:
                     if ("".equals(IZipcode.getText().toString().trim())) {
                         Toast.makeText(getApplicationContext(), "无打印数据，请重新操作！", Toast.LENGTH_SHORT).show();
@@ -178,11 +195,12 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
                     ztwm004.putString("Charg", Charg.getText().toString().trim());
                     //批量编号
                     ztwm004.putString("Zcupno", Zcupno.getText().toString().trim());
+                    //入库日期
                     ztwm004.putString("Zproddate", Zproddate.getText().toString().trim());
+                    Log.i("------->Zproddate", Zproddate.getText().toString().trim());
                     ztwm004.putString("Werks", Werks.getText().toString().trim());
                     //客户编码
                     ztwm004.putString("Zkurno", Zkurno.getText().toString().trim());
-                    System.out.println("========>Zkurno"+Zkurno.getText().toString().trim());
                     ztwm004.putString("Zbc", Zbc.getText().toString().trim());
                     ztwm004.putString("Zlinecode", Zlinecode.getText().toString().trim());
                     ztwm004.putString("Matnr", Matnr.getText().toString().trim());
@@ -191,7 +209,6 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
                     //单位转换成汉字
                     String mseh3 = map.get(Meins.getText().toString().trim());
                     ztwm004.putString("Meins", mseh3);
-                    //入库日期
                     ztwm004.putString("Zgrdate", Zgrdate.getText().toString().trim());
                     ztwm004.putString("Zlichn", Zlichn.getText().toString().trim());
                     //经销商编码
@@ -205,6 +222,7 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
                     //客户名称
                     ztwm004.putString("EName2", EName2.getText().toString().trim());
                     intent.putExtras(ztwm004);
+
                     //进入到下一个Activity
                     startActivity(intent);
                     //Activity过场动画
