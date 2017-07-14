@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  * author: xg.chen
  * date: 2017/7/10 17:08
  * version: 1.0
-*/
+ */
 public class BlueBoothPinterActivity extends AppCompatActivity {
 
     private EditText IZipcode;
@@ -145,16 +145,16 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
         new getMeinsTask().execute();
     }
 
-    /** 
+    /**
      * description: 编码输入后回车键操作
      * author: xg.chen
      * date: 2017/7/10 17:12
      * version: 1.0
-    */
-    private  TextView.OnEditorActionListener EnterListener = new TextView.OnEditorActionListener() {
+     */
+    private TextView.OnEditorActionListener EnterListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            if (actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_ACTION_DONE || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event.getAction())) {
                 if (!"".equals(IZipcode.getText().toString().trim())) {
                     // 正则判断下是否输入值为数字
                     Pattern p2 = Pattern.compile("\\d");
@@ -232,7 +232,7 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
                     ExitApplication.getInstance().exit();
                     Toast.makeText(getApplicationContext(), "退出应用", Toast.LENGTH_SHORT).show();
                     break;
-                default :
+                default:
                     break;
             }
 
