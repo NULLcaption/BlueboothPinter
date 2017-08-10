@@ -7,6 +7,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -64,13 +65,16 @@ public class BlueBoothPinterActivity extends AppCompatActivity {
      * init view
      */
     public void initView() {
+        //托盘编码
+        IZipcode = (EditText) findViewById(R.id.IZipcode);
+        IZipcode.setInputType(InputType.TYPE_NULL);
+        IZipcode.setOnEditorActionListener(EnterListener);
+
         Zcupno = (TextView) findViewById(R.id.Zcupno);
         Werks = (TextView) findViewById(R.id.werks);
         Zkurno = (TextView) findViewById(R.id.Zkurno);
         Zbc = (TextView) findViewById(R.id.Zbc);
         Zlinecode = (TextView) findViewById(R.id.Zlinecode);
-        IZipcode = (EditText) findViewById(R.id.IZipcode);
-        IZipcode.setOnEditorActionListener(EnterListener);
         Matnr = (TextView) findViewById(R.id.matnr);
         Zproddate = (TextView) findViewById(R.id.Zproddate);
         Charg = (TextView) findViewById(R.id.Charg);

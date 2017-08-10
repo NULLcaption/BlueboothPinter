@@ -24,8 +24,8 @@ public class Bluetooth {
     private static BluetoothAdapter myBluetoothAdapter;
     private static BluetoothDevice myDevice;
 
-    public static boolean open(BluetoothAdapter myBluetoothAdapter, BluetoothDevice btDevice) {
-        if (SPPOpen(myBluetoothAdapter, btDevice) == false) {
+    public static boolean open(BluetoothAdapter myBluetoothAdapter, BluetoothDevice btDevice, String BDAddr) {
+        if (SPPOpen(myBluetoothAdapter, btDevice, BDAddr) == false) {
             return false;
         }
         return true;
@@ -56,20 +56,19 @@ public class Bluetooth {
             ErrorMessage = "读取蓝牙设备错误";
             return false;
         }
-        if (!SPPOpen(myBluetoothAdapter, myDevice)) {
+        if (!SPPOpen(myBluetoothAdapter, myDevice, BDAddr)) {
             return false;
         }
         return true;
     }
 
     /**
-     * SSP open
-     *
-     * @param BluetoothAdapter
-     * @param btDevice
-     * @return
+     * description:SSP open 打开蓝牙设备
+     * author: xg.chen
+     * date: 2017/7/18 11:29
+     * version: 1.0
      */
-    private static boolean SPPOpen(BluetoothAdapter BluetoothAdapter, BluetoothDevice btDevice) {
+    private static boolean SPPOpen(BluetoothAdapter BluetoothAdapter, BluetoothDevice btDevice, String BDAddr) {
         boolean error = false;
         myBluetoothAdapter = BluetoothAdapter;
         myDevice = btDevice;
@@ -132,6 +131,59 @@ public class Bluetooth {
         }
 
         return true;
+    }
+
+    /**
+     * 与设备配对 参考源码：platform/packages/apps/Settings.git
+     * /Settings/src/com/android/settings/bluetooth/CachedBluetoothDevice.java
+     */
+    static public boolean createBond(Class<? extends BluetoothDevice> btClass, BluetoothDevice btDevice) throws Exception {
+        Method createBondMethod = btClass.getMethod("createBond");
+        Boolean returnValue = (Boolean) createBondMethod.invoke(btDevice);
+        return returnValue.booleanValue();
+    }
+
+    /**
+     * 与设备解除配对
+     *
+     * @param BDAddr
+     * @return
+     * @throws Exception
+     */
+    public static boolean ClosePrinter(String BDAddr) {
+        myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (myBluetoothAdapter == null) {
+            ErrorMessage = "蓝牙系统错误";
+            return false;
+        }
+        myDevice = myBluetoothAdapter.getRemoteDevice(BDAddr);
+        if (myDevice == null) {
+            ErrorMessage = "读取蓝牙设备错误";
+            return false;
+        }
+        try {
+            if (!removeBond(myBluetoothAdapter, myDevice)) {
+                ErrorMessage = "与设备解除配对失败";
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    /**
+     * 与设备解除配对 参考源码：platform/packages/apps/Settings.git
+     * /Settings/src/com/android/settings/bluetooth/CachedBluetoothDevice.java
+     */
+    private static boolean removeBond(BluetoothAdapter bluetoothAdapter, BluetoothDevice btDevice) throws Exception {
+        boolean error = false;
+        myBluetoothAdapter = bluetoothAdapter;
+        myDevice = btDevice;
+
+        Method removeBondMethod = myDevice.getClass().getMethod("removeBond");
+        Boolean returnValue = (Boolean) removeBondMethod.invoke(btDevice);
+        return returnValue.booleanValue();
     }
 
     /**
@@ -207,6 +259,7 @@ public class Bluetooth {
 
     /**
      * SSP read time out
+     *
      * @param Data
      * @param DataLen
      * @param Timeout
@@ -254,8 +307,8 @@ public class Bluetooth {
         }
     }
 
-    public static boolean zp_open(BluetoothAdapter myBluetoothAdapter, BluetoothDevice btDevice) {
-        if (SPPOpen(myBluetoothAdapter, btDevice) == false) return false;
+    public static boolean zp_open(BluetoothAdapter myBluetoothAdapter, BluetoothDevice btDevice,String BDAddr) {
+        if (SPPOpen(myBluetoothAdapter, btDevice, BDAddr) == false) return false;
         return true;
     }
 }

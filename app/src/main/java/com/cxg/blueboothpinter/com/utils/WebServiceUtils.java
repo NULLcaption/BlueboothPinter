@@ -38,8 +38,8 @@ public class WebServiceUtils {
     //请求路径
     public static String SOAP_ACTION = "urn:sap-com:document:sap:soap:functions:mc-style/ZwmRfcIts003";
     //请求的webservice路径
-    public static final String URL = "http://192.168.0.16:8000/sap/bc/srt/rfc/sap/zwmits3/700/zwmits3/binding?sap-client=700&sap-user=rfc&sap-password=poiuyt";
-    public static final String URL_004 = "http://192.168.0.16:8000/sap/bc/srt/rfc/sap/zwmits4/700/zwmits4/binding?sap-client=700&sap-user=rfc&sap-password=poiuyt";
+    public static final String URL = "http://192.168.0.12:8000/sap/bc/srt/rfc/sap/zwmits3/800/zwmits3/binding?sap-client=800&sap-user=ABAPRFC&sap-password=xpp2@12";
+    public static final String URL_004 = "http://192.168.0.12:8000/sap/bc/srt/rfc/sap/zwmits4/800/zwmits4/binding?sap-client=800&sap-user=ABAPRFC&sap-password=xpp2@12";
     // 含有3个线程的线程池
     private static final ExecutorService executorService = Executors.newFixedThreadPool(3);
 

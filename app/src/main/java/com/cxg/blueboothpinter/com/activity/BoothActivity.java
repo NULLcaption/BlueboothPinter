@@ -180,8 +180,11 @@ public class BoothActivity extends AppCompatActivity {
         lable_sdk.ErrorConfig(true);
         for (int i = 1; i <= num; i++) {
             DrawContent(i, ztwm004);// content
-            lable_sdk.PrintPage(0x04, 40, false);
+            lable_sdk.PrintPage(0x04, 20, false);
             lable_sdk.ClearPage();
+        }
+        if(Bluetooth.ClosePrinter(BDAddress)){
+            showMessage("打印成功，已解除解除蓝牙绑定！");
         }
         Bluetooth.close();
         statusBox.Close();
@@ -209,13 +212,16 @@ public class BoothActivity extends AppCompatActivity {
         lable_sdk.SetPageSize(83 * 8, 72 * 8);
         lable_sdk.ErrorConfig(true);
         DrawContent(1, ztwm004);// content
-        lable_sdk.PrintPage(0x04, 50, false);
+        lable_sdk.PrintPage(0x04, 20, false);
         lable_sdk.SelectPage(0);
         lable_sdk.ClearPage();
         lable_sdk.SelectPage(1);
         lable_sdk.ClearPage();
         if (zp_realtime_status(10000) != 0) {
             showMessage(Bluetooth.ErrorMessage);
+        }
+        if(Bluetooth.ClosePrinter(BDAddress)){
+            showMessage("打印成功，已解除解除蓝牙绑定！");
         }
         Bluetooth.close();
         statusBox.Close();
@@ -302,11 +308,12 @@ public class BoothActivity extends AppCompatActivity {
         }
     }// DrawContent
 
-    /**
-     * 远程连接设备的蓝牙列表
-     *
-     * @return
-     */
+    /** 
+     * description: 远程连接设备的蓝牙列表
+     * author: xg.chen
+     * date: 2017/7/18 11:23 
+     * version: 1.0
+    */
     public boolean ListBluetoothDevice() {
         final List<Map<String, String>> list = new ArrayList<>();
         ListView listView = (ListView) findViewById(R.id.listView1);
@@ -343,7 +350,7 @@ public class BoothActivity extends AppCompatActivity {
             }
         });
         return true;
-    }// ListBluetoothDevice
+    }
 
     /**
      * 输出信息

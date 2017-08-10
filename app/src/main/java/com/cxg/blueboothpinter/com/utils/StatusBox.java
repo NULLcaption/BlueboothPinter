@@ -33,7 +33,7 @@ public class StatusBox {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         dialogView = inflater.inflate(R.layout.statusbox, null, false);
         dialogView.setBackgroundResource(R.layout.statusbox_shape);
-        popupWindow = new PopupWindow(dialogView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);//����PopupWindowʵ��
+        popupWindow = new PopupWindow(dialogView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);
         BoxParent = parent;
         ParentContext = context;
 
